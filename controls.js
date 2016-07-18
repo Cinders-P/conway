@@ -27,6 +27,11 @@ const ControlsComponent = React.createClass({
 			),
 			React.createElement(
 				"button",
+				{ onClick: this.props.clear, className: "btn" },
+				"Clear"
+			),
+			React.createElement(
+				"button",
 				{ onClick: this.props.slower, className: "btn" },
 				"Slower"
 			),

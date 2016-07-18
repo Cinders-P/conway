@@ -19,6 +19,27 @@ const BoardComponent = React.createClass({
 			tileStates: nextTileStates
 		});
 	},
+	changeState(row, col) {
+		const changeTiles = this.state.tileStates;
+		if (this.state.tileStates[row][col] === 0) changeTiles[row][col] = 1;else changeTiles[row][col] = 0;
+		this.setState({
+			tileStates: changeTiles
+		});
+	},
+	clearBoard() {
+		const resetStates = [];
+		for (let i = 0; i < this.state.dimension; i++) {
+			resetStates[i] = [];
+			for (let x = 0; x < this.state.dimension; x++) {
+				resetStates[i][x] = 0;
+			}
+		}
+		this.setState({
+			paused: true,
+			tileStates: resetStates,
+			generation: 0
+		});
+	},
 	determineNext(i, x, currentState) {
 		let neighbors = 0; // this is a top -> bottom, left -> right grid
 		if (i - 1 >= 0 && x - 1 >= 0 && this.state.tileStates[i - 1][x - 1] > 0) // check top-left
@@ -117,7 +138,7 @@ const BoardComponent = React.createClass({
 		for (let i = 0; i < this.state.dimension; i++) {
 			const x = [];
 			for (let d = 0; d < this.state.dimension; d++) {
-				x[d] = React.createElement(TileComponent, { tileState: this.state.tileStates[i][d] });
+				x[d] = React.createElement(TileComponent, { changeState: this.changeState, index: [i, d], tileState: this.state.tileStates[i][d] });
 			}
 			y[i] = React.createElement(
 				'div',
@@ -129,7 +150,7 @@ const BoardComponent = React.createClass({
 			'div',
 			null,
 			y,
-			React.createElement(ControlsComponent, { isPaused: this.state.paused, pause: this.pauseGame, play: this.playGame, reset: this.resetGame, faster: this.speedUp, slower: this.speedDown, gen: this.state.generation })
+			React.createElement(ControlsComponent, { clear: this.clearBoard, isPaused: this.state.paused, pause: this.pauseGame, play: this.playGame, reset: this.resetGame, faster: this.speedUp, slower: this.speedDown, gen: this.state.generation })
 		);
 	}
 });
